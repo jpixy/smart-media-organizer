@@ -1,0 +1,191 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "smart-media-organizer"
+version = "0.1.0"
+description = "AI-powered media file organizer with modern Python best practices"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/yourusername/smart-media-organizer"
+repository = "https://github.com/yourusername/smart-media-organizer"
+keywords = ["ai", "media", "organizer", "movies", "tv-shows", "cli"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
+]
+packages = [{include = "smart_media_organizer", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+# CLI Framework - Modern type-safe CLI
+typer = {extras = ["all"], version = "^0.9.0"}
+# Data Validation and Settings
+pydantic = "^2.5.0"
+pydantic-settings = "^2.1.0"
+# HTTP Client - Modern async HTTP
+httpx = "^0.25.0"
+# Logging - Structured logging
+structlog = "^23.2.0"
+# UI/UX - Rich terminal output
+rich = "^13.7.0"
+# AI/ML APIs
+huggingface-hub = "^0.19.0"
+# Media Processing
+pymediainfo = "^6.1.0"
+# Utilities
+aiofiles = "^23.2.1"
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+pytest-mock = "^3.12.0"
+pytest-cov = "^4.1.0"
+pytest-xdist = "^3.5.0"  # Parallel testing
+# Code Quality
+ruff = "^0.1.0"           # Modern linter (replaces flake8, isort, etc.)
+black = "^23.0.0"         # Code formatting
+mypy = "^1.7.0"           # Type checking
+# Git Hooks
+pre-commit = "^3.6.0"
+# Documentation
+mkdocs = "^1.5.0"
+mkdocs-material = "^9.5.0"
+
+[tool.poetry.scripts]
+smart-organizer = "smart_media_organizer.cli.main:app"
+
+# Ruff configuration (modern linting)
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "ARG",  # flake8-unused-arguments
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "PTH",  # flake8-use-pathlib
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+unfixable = ["F841"]  # Don't autofix unused variables
+
+[tool.ruff.per-file-ignores]
+"tests/**/*" = ["ARG", "S101"]  # Allow assert statements in tests
+"**/__init__.py" = ["F401"]     # Allow unused imports in __init__.py
+
+[tool.ruff.isort]
+known-first-party = ["smart_media_organizer"]
+force-sort-within-sections = true
+
+# Black configuration
+[tool.black]
+line-length = 88
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+# MyPy configuration
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+strict_concatenate = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pymediainfo.*",
+    "huggingface_hub.*",
+]
+ignore_missing_imports = true
+
+# Pytest configuration
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=smart_media_organizer",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+asyncio_mode = "auto"
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+show_missing = true
+skip_covered = false
+
+[tool.coverage.html]
+directory = "htmlcov"
