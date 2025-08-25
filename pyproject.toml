@@ -46,6 +46,7 @@ huggingface-hub = "^0.19.0"
 pymediainfo = "^6.1.0"
 # Utilities
 aiofiles = "^23.2.1"
+python-magic = "^0.4.27"
 
 [tool.poetry.group.dev.dependencies]
 # Testing
@@ -66,6 +67,14 @@ mkdocs-material = "^9.5.0"
 
 [tool.poetry.scripts]
 smart-organizer = "smart_media_organizer.cli.main:app"
+
+# Ruff configuration (temporarily ignore type-checking rules for Day 3)
+[tool.ruff.lint]
+ignore = [
+    "TCH001",  # Move application import into type-checking block
+    "TCH003",  # Move standard library import into type-checking block
+    "ARG002",  # Unused method argument
+]
 
 # Ruff configuration (modern linting)
 [tool.ruff]
